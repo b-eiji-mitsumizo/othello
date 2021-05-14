@@ -36,6 +36,27 @@ public class Board {
 	}
 	
 	// TODO : 勝者を判定する関数。
+	public void checkWinner() {
+		int numOfBlack = 0;
+		int numOfWhite = 0;
+		
+		for(int i = 0; i < this.board.length; i++) {
+			for(int j = 0; j < this.board[i].length; j++) {
+				if(this.board[i][j] == "●") {
+					numOfBlack++;
+				} else {
+					numOfWhite++;
+				}
+			}
+		}
+		
+		if(numOfBlack < numOfWhite) {
+			System.out.println("白の勝ち");
+		} else {
+			System.out.println("黒の勝ち");
+		}
+	}
+	
 	// TODO : 置けるかチェックする関数
 	public void checkIfAddKoma(Player turnPlayer){
 		
@@ -51,5 +72,7 @@ public class Board {
 		}
 	}
 	// TODO : ひっくり返す関数
+	
+	
 	// TODO : 置ける場所に☆を表示
 }

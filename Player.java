@@ -45,7 +45,6 @@ public class Player {
 				System.out.println("もう一度。");
 			}	
 		}
-		
 		return place;
 	}
 	

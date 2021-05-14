@@ -15,7 +15,7 @@ public class Main {
 		int count = 0;
 		boolean finish = false;
 		
-		while(count < 9) {
+		while(count < 60) {
 			board.displayBoard();
 			board.checkIfAddKoma(count % 2 == 0 ? player1 : player2);
 			if(finish) {
