@@ -23,6 +23,10 @@ public class Main {
 			}
 			count++;
 		}
-		}
+		board.checkWinner();
+		
+		System.out.println("最終結果");
+		board.displayBoard();
+	}
 
 }

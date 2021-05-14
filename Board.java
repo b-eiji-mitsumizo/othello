@@ -50,6 +50,9 @@ public class Board {
 			}
 		}
 		
+		System.out.println("白：" + numOfWhite);
+		System.out.println("黒：" + numOfBlack);
+		
 		if(numOfBlack < numOfWhite) {
 			System.out.println("白の勝ち");
 		} else {
@@ -72,6 +75,47 @@ public class Board {
 		}
 	}
 	// TODO : ひっくり返す関数
+	public void chengeColor() {
+		
+	}
+	
+	public void checkAround(int row, int col, int color) {
+		boolean[] direction = new boolean[8];
+		
+		// TODO : 左上
+		upperLeft();
+		// TODO : 上
+		upper();;
+		// TODO : 右上
+		upperRight();
+		// TODO : 右
+		right();
+		// TODO : 右下
+		downRight();
+		// TODO : 下
+		down();;
+		// TODO : 左下
+		downleft();;
+		// TODO : 左
+		left();		
+		
+	}
+	
+	public void upperLeft() {}
+	
+	public void upper() {}
+	
+	public void upperRight() {}
+	
+	public void right() {}
+	
+	public void downRight() {}
+	
+	public void down() {}
+	
+	public void downleft() {}
+	
+	public void left() {}
 	
 	
 	// TODO : 置ける場所に☆を表示
