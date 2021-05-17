@@ -10,9 +10,11 @@ public class Board {
 	final String WHITE = "〇";
 	final String EMPTY = "　"; 
 	
-	
+	/**
+	 * コンストラクタ
+	 * @param マスの大きさ
+	 */
 	public Board(int masNum) {
-		// TODO 自動生成されたコンストラクター・スタブ
 		this.MAS_NUMBER = masNum;
 		this.board = new String[MAS_NUMBER][MAS_NUMBER];
 		
@@ -22,6 +24,9 @@ public class Board {
 			}
 		}
 		
+		/**
+		 * 真ん中に黒を２つと白を２つ
+		 */
 		this.board[(MAS_NUMBER / 2) - 1][(MAS_NUMBER / 2) - 1] = WHITE;
 		this.board[(MAS_NUMBER / 2)][(MAS_NUMBER / 2)] = WHITE;
 		
@@ -33,7 +38,10 @@ public class Board {
 	}
 	
 	
-	// TODO : マスを表示する.(変数でできるように。)
+	/**
+	 * ボードを表示する。
+	 * @return void
+	 */
 	public void displayBoard() {
 		String headString = "   ";
 		for(int i = 0; i < MAS_NUMBER; i++) {
@@ -61,7 +69,11 @@ public class Board {
 		}
 	}
 	
-	// TODO : 勝者を判定する関数。
+	/**
+	 * コマの数を数え、勝者を表示する関数
+	 * @param player1 : 黒
+	 * @param player2 ; 白
+	 */
 	public void checkWinner(Player player1, Player player2) {
 		int numOfBlack = 0;
 		int numOfWhite = 0;
@@ -88,7 +100,13 @@ public class Board {
 		}
 	}
 	
-	// TODO : 置けるかチェックする関数
+	/**
+	 * コマを置けるかどうかをチェックする ＋ ひっくり返す。
+	 * @param turnPlayer : ターン中のプレイヤー
+	 * @return 
+	 * true :  コマを置けた。
+	 * false : パスを使った。
+	 */
 	public boolean checkIfAddKoma(Player turnPlayer){
 		while(true) {
 			int[] place = turnPlayer.choosePlace();
@@ -105,7 +123,13 @@ public class Board {
 			}
 		}
 	}
-	// TODO : ひっくり返す関数
+	
+	/**
+	 * コマをひっくり返す関数
+	 * @param x : 横軸(右が＋)
+	 * @param y : 縦軸(下が＋)
+	 * @param color : Player.color
+	 */
 	public void chengeColor(int x, int y, String color) {
 		if(color.equals(WHITE)){ 
 			this.board[y][x] = WHITE;
@@ -115,30 +139,27 @@ public class Board {
 		
 	}
 	
+	/**
+	 * 8方向にひっくり返せる部分があるかをチェック
+	 * @param x : 横軸(右が＋)
+	 * @param y : 縦軸(下が＋)
+	 * @param color : Player.color
+	 * @return
+	 * 			true  :  ひっくり返すコマがあった。
+	 * 			false :  ひっくり返すコマがなかった。
+	 */			
 	public boolean checkAround(int y, int x, String color) {
+		
 		boolean[] check = new boolean[8];
-		// TODO : 左上
-//		upperLeft();
+		
+		
 		check[0] = upperLeft(x, y, color, false);
-
-//		// TODO : 上
 		check[1] = upper(x, y, color, false);
-//		// TODO : 右上
-//		upperRight();
 		check[2] = upperRight(x, y, color, false);
-//		// TODO : 右
 		check[3] = right(x, y, color, false);
-//		right();
-//		// TODO : 右下
 		check[4] = downRight(x, y, color, false);
-//		downRight();
-//		// TODO : 下
 		check[5] = down(x, y, color, false);
-//		down();
-//		// TODO : 左下
 		check[6] = downleft(x, y, color, false);
-//		downleft();
-		// TODO : 左
 		check[7] = left(x, y, color, false);	
 		
 		boolean possible = false;
