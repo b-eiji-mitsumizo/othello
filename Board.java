@@ -24,7 +24,7 @@ public class Board {
 	}
 	
 	
-	// TODO : マスを表示する
+	// TODO : マスを表示する.(変数でできるように。)
 	public void displayBoard() {
 		System.out.println("   0　| 1　| 2　| 3　| 4　| 5　| 6　| 7　");
 		System.out.println("  -----------------------------------------");
@@ -80,12 +80,11 @@ public class Board {
 	}
 	
 	public void checkAround(int row, int col, int color) {
-		boolean[] direction = new boolean[8];
 		
 		// TODO : 左上
 		upperLeft();
 		// TODO : 上
-		upper();;
+		upper();
 		// TODO : 右上
 		upperRight();
 		// TODO : 右
@@ -93,9 +92,9 @@ public class Board {
 		// TODO : 右下
 		downRight();
 		// TODO : 下
-		down();;
+		down();
 		// TODO : 左下
-		downleft();;
+		downleft();
 		// TODO : 左
 		left();		
 		
