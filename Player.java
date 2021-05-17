@@ -7,6 +7,8 @@ public class Player {
 	private String name;
 	private String color;
 	Scanner scanner = new Scanner(System.in);
+	final static String BLACK = "●";
+	final static String WHITE = "〇";
 	
 	public Player(String name, String color){
 		// TODO 自動生成されたコンストラクター・スタブ
@@ -23,7 +25,7 @@ public class Player {
 		int[] place = new int[2];
 		
 		while(true) {
-			
+			System.out.println(this.name + "さん(" + this.color + ")のターンです");
 			System.out.print("縦を0 ～ 7で選んでください。 > ");
 			place[0] = scanner.nextInt();
 			
