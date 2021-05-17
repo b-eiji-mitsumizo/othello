@@ -1,5 +1,7 @@
 package othello;
 
+import java.util.Scanner;
+
 public class Main {
 	
 	final static String BLACK = "●";
@@ -8,28 +10,54 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO 自動生成されたメソッド・スタブ
 		
-		Board board = new Board();
+		Scanner scan = new Scanner(System.in);
 		
-		Player player1 = new Player("EIJI", BLACK);
-		Player player2 = new Player("MIKI", WHITE);
+		System.out.print("何マスのオセロをしたいですか？ > ");
+		int masNum = scan.nextInt();
+		
+		
+		Board board = new Board(masNum);
+		
+		System.out.print("Player1(" + BLACK + ")の名前を教えてください。 > ");
+		String player1Name = scan.next();
+		
+		Player player1 = new Player(player1Name, BLACK, masNum);
+		
+		System.out.print("Player2(" + WHITE + ")の名前を教えてください。 > ");
+		String player2Name = scan.next();
+		
+		Player player2 = new Player(player2Name, WHITE, masNum);
 		
 		
 
 		int count = 0;
-		boolean finish = false;
+		final int playNum = (masNum * masNum) - 4;
+		boolean didPutKoma = false;
 		
-		while(count < 60) {
-			board.displayBoard();
-			board.checkIfAddKoma(count % 2 == 0 ? player1 : player2);
-			if(finish) {
-				break;
+		Player playingPlayer = player1;
+		
+		while(count < playNum) {
+//			board.displayBoard();
+			board.displayPossiblePut(playingPlayer);
+			didPutKoma = board.checkIfAddKoma(playingPlayer);
+			
+			
+			if (playingPlayer == player1){
+				playingPlayer = player2;
+			} else {
+				playingPlayer = player1;
 			}
-			count++;
+			
+			if(didPutKoma) {
+				count++;	
+			}
 		}
-		board.checkWinner();
+		board.checkWinner(player1, player2);
 		
 		System.out.println("最終結果");
 		board.displayBoard();
+		
+		scan.close();
 	}
 
 }

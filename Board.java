@@ -3,15 +3,17 @@ package othello;
 public class Board {
 	
 	private String[][] board;
-	final int MAS_NUMBER = 8;
+	private String[][] copyBoard;
+	final int MAS_NUMBER;
 	
 	final String BLACK = "●";
 	final String WHITE = "〇";
 	final String EMPTY = "　"; 
 	
 	
-	public Board() {
+	public Board(int masNum) {
 		// TODO 自動生成されたコンストラクター・スタブ
+		this.MAS_NUMBER = masNum;
 		this.board = new String[MAS_NUMBER][MAS_NUMBER];
 		
 		for(int i = 0; i < MAS_NUMBER; i++) {
@@ -20,29 +22,47 @@ public class Board {
 			}
 		}
 		
+		this.board[(MAS_NUMBER / 2) - 1][(MAS_NUMBER / 2) - 1] = WHITE;
+		this.board[(MAS_NUMBER / 2)][(MAS_NUMBER / 2)] = WHITE;
 		
-		this.board[3][3] = WHITE;
-		this.board[4][4] = WHITE;
+		this.board[(MAS_NUMBER / 2) - 1][(MAS_NUMBER / 2)] = BLACK;
+		this.board[(MAS_NUMBER / 2)][(MAS_NUMBER / 2) - 1] = BLACK;
 		
-		this.board[3][4] = BLACK;
-		this.board[4][3] = BLACK;
+		this.copyBoard = new String[MAS_NUMBER][MAS_NUMBER];
+		
 	}
 	
 	
 	// TODO : マスを表示する.(変数でできるように。)
 	public void displayBoard() {
+		String headString = "   ";
+		for(int i = 0; i < MAS_NUMBER; i++) {
+			headString += i + "　| ";
+		}
 		
-		System.out.println("   0　| 1　| 2　| 3　| 4　| 5　| 6　| 7　");
-		System.out.println("  -----------------------------------------");
-		
-		for(int row = 0; row < MAS_NUMBER; row++) {
-			System.out.println(row + "  " + board[row][0] + " | " + board[row][1] + " | " + board[row][2]+ " | " + board[row][3] + " | " + board[row][4] + " | " + board[row][5] + " | " + board[row][6] + " | " + board[row][7] );
+		System.out.println(headString);
+		if(MAS_NUMBER == 8) {
 			System.out.println("  -----------------------------------------");
+		}else if(MAS_NUMBER == 4) {
+			System.out.println("  ------------------");
+		}
+		
+		for(int iy = 0; iy < MAS_NUMBER; iy++) {
+			String rowString = iy + "  ";
+			for(int jx = 0; jx < MAS_NUMBER; jx++) {
+				rowString += this.board[iy][jx] + " | ";			
+			}
+			System.out.println(rowString);
+			if(MAS_NUMBER == 8) {
+				System.out.println("  -----------------------------------------");
+			}else if(MAS_NUMBER == 4) {
+				System.out.println("  ------------------");
+			}
 		}
 	}
 	
 	// TODO : 勝者を判定する関数。
-	public void checkWinner() {
+	public void checkWinner(Player player1, Player player2) {
 		int numOfBlack = 0;
 		int numOfWhite = 0;
 		
@@ -56,27 +76,32 @@ public class Board {
 			}
 		}
 		
-		System.out.println("白：" + numOfWhite);
-		System.out.println("黒：" + numOfBlack);
+		System.out.println(player1.getName() + "さん：" + numOfBlack);
+		System.out.println(player2.getName() + "さん：" + numOfWhite);
 		
 		if(numOfBlack < numOfWhite) {
-			System.out.println("白の勝ち");
+			System.out.println(player2.getName() + "さんの勝ち");
+		} else if(numOfBlack > numOfWhite) {
+			System.out.println(player1.getName() + "さんの勝ち");
 		} else {
-			System.out.println("黒の勝ち");
+			System.out.println("引き分け");
 		}
 	}
 	
 	// TODO : 置けるかチェックする関数
-	public void checkIfAddKoma(Player turnPlayer){
-		
+	public boolean checkIfAddKoma(Player turnPlayer){
 		while(true) {
-			int[] place = turnPlayer.choosePlace();		
+			int[] place = turnPlayer.choosePlace();
+			if(place[0] == -1 && place[1] == -1) {
+				System.out.println("パスですね。");
+				return false;
+			}
 			if(this.board[place[0]][place[1]] != EMPTY) {
 				System.out.println("もうすでに埋められている場所なのでやり直してください。");
 				continue;
 			} else if(checkAround(place[0], place[1], turnPlayer.getColor())){
-				this.board[place[0]][place[1]] = turnPlayer.getColor();;
-				break;
+				this.board[place[0]][place[1]] = turnPlayer.getColor();
+				return true;
 			}
 		}
 	}
@@ -198,7 +223,7 @@ public class Board {
 		int moving_y = y;
 		int moving_x = x;
 		
-		if(y < 1 || x > 6) {
+		if(y < 1 || x > MAS_NUMBER - 2){
 			return false;
 		} else {
 			moving_y -= 1;
@@ -228,7 +253,7 @@ public class Board {
 	
 	public boolean right(int x, int y, String color, boolean possible_reverse) {
 		int moving_x = x;
-		if(x > 6) {
+		if(x > MAS_NUMBER - 2) {
 			return false;
 		} else {
 			moving_x += 1;
@@ -259,7 +284,7 @@ public class Board {
 		int moving_y = y;
 		int moving_x = x;
 		
-		if(y > 6 || x > 6) {
+		if(y > MAS_NUMBER - 2 || x > MAS_NUMBER - 2) {
 			return false;
 		} else {
 			moving_y += 1;
@@ -289,7 +314,7 @@ public class Board {
 	
 	public boolean down(int x, int y, String color, boolean possible_reverse) {
 		int moving_y = y;
-		if(y > 6) {
+		if(y > MAS_NUMBER - 2) {
 			return false;
 		} else {
 			moving_y += 1;
@@ -320,7 +345,7 @@ public class Board {
 		int moving_y = y;
 		int moving_x = x;
 		
-		if(y > 6 || x < 1) {
+		if(y > MAS_NUMBER - 2 || x < 1) {
 			return false;
 		} else {
 			moving_y += 1;
@@ -377,6 +402,334 @@ public class Board {
 		return true;
 	}
 	
+	public boolean checkPutKoma(int x, int y, Player turningPlayer){
+		if(this.board[y][x] != EMPTY) {
+				return false;
+		} else if(justCheckAround(y,x, turningPlayer.getColor())){
+				return true;
+		} else {
+			return false;
+		}
+	}
 	
 	// TODO : 置ける場所に☆を表示
+	public void displayPossiblePut(Player playingPlayer) {
+		for(int i = 0; i < MAS_NUMBER; i++) {
+			for(int j = 0; j < MAS_NUMBER; j++) {
+				this.copyBoard[i][j] = this.board[i][j];
+			}
+		}
+		
+		String putStar = "☆";
+		boolean possibleToPut = false;
+		
+		for(int iy = 0; iy < MAS_NUMBER; iy++ ) {
+			for(int jx = 0; jx < MAS_NUMBER; jx++) {
+				possibleToPut = checkPutKoma(jx, iy, playingPlayer);
+				if(possibleToPut) {
+					this.copyBoard[iy][jx]= putStar;
+				}
+				possibleToPut = false;
+			}
+		}
+		copydisplayBoard();
+	}
+	
+	public void copydisplayBoard() {
+		String headString = "   ";
+		for(int i = 0; i < MAS_NUMBER; i++) {
+			headString += i + "　| ";
+		}
+		
+		System.out.println(headString);
+		if(MAS_NUMBER == 8) {
+			System.out.println("  -----------------------------------------");
+		}else if(MAS_NUMBER == 4) {
+			System.out.println("  ------------------");
+		}
+		
+		for(int iy = 0; iy < MAS_NUMBER; iy++) {
+			String rowString = iy + "  ";
+			for(int jx = 0; jx < MAS_NUMBER; jx++) {
+				rowString += this.copyBoard[iy][jx] + " | ";			
+			}
+			System.out.println(rowString);
+			if(MAS_NUMBER == 8) {
+				System.out.println("  -----------------------------------------");
+			}else if(MAS_NUMBER == 4) {
+				System.out.println("  ------------------");
+			}
+		}
+	}
+	public boolean justCheckAround(int y, int x, String color) {
+		boolean[] check = new boolean[8];
+		// TODO : 左上
+//		upperLeft();
+		check[0] = checkupperLeft(x, y, color, false);
+
+//		// TODO : 上
+		check[1] = checkupper(x, y, color, false);
+//		// TODO : 右上
+//		upperRight();
+		check[2] = checkupperRight(x, y, color, false);
+//		// TODO : 右
+		check[3] = checkright(x, y, color, false);
+//		right();
+//		// TODO : 右下
+		check[4] = checkdownRight(x, y, color, false);
+//		downRight();
+//		// TODO : 下
+		check[5] = checkdown(x, y, color, false);
+//		down();
+//		// TODO : 左下
+		check[6] = checkdownleft(x, y, color, false);
+//		downleft();
+		// TODO : 左
+		check[7] = checkleft(x, y, color, false);	
+		
+		boolean possible = false;
+		for(boolean eachCheck : check) {
+			if(eachCheck) {
+				possible = true;
+				break;
+			}
+		}
+		return possible;
+	}
+	
+	public boolean checkupperLeft(int x, int y, String color, boolean possible_reverse) {
+		int moving_y = y;
+		int moving_x = x;
+		
+		if(y < 1 || x < 1) {
+			return false;
+		} else {
+			moving_y -= 1;
+			moving_x -= 1;
+			
+			if(this.board[moving_y][moving_x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[moving_y][moving_x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkupperLeft(moving_x, moving_y, color, possible_reverse)) {
+						return true;
+					}else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean checkupper(int x, int y, String color, boolean possible_reverse) {
+		int moving_y = y;
+		if(y < 1) {
+			return false;
+		} else {
+			moving_y -= 1;
+			
+			if(this.board[moving_y][x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[moving_y][x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkupper(x, moving_y, color, possible_reverse)) {
+						return true;
+					}else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean checkupperRight(int x, int y, String color, boolean possible_reverse) {
+		int moving_y = y;
+		int moving_x = x;
+		
+		if(y < 1 || x > MAS_NUMBER - 2){
+			return false;
+		} else {
+			moving_y -= 1;
+			moving_x += 1;
+			
+			if(this.board[moving_y][moving_x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[moving_y][moving_x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkupperRight(moving_x, moving_y, color, possible_reverse)) {
+						return true;
+					}else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean checkright(int x, int y, String color, boolean possible_reverse) {
+		int moving_x = x;
+		if(x > MAS_NUMBER - 2) {
+			return false;
+		} else {
+			moving_x += 1;
+			
+			if(this.board[y][moving_x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[y][moving_x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkright(moving_x, y, color, possible_reverse)) {
+						return true;
+					}else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean checkdownRight(int x, int y, String color, boolean possible_reverse) {
+		int moving_y = y;
+		int moving_x = x;
+		
+		if(y > MAS_NUMBER - 2 || x > MAS_NUMBER - 2) {
+			return false;
+		} else {
+			moving_y += 1;
+			moving_x += 1;
+			
+			if(this.board[moving_y][moving_x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[moving_y][moving_x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkdownRight(moving_x, moving_y, color, possible_reverse)) {
+						return true;
+					}else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean checkdown(int x, int y, String color, boolean possible_reverse) {
+		int moving_y = y;
+		if(y > MAS_NUMBER - 2) {
+			return false;
+		} else {
+			moving_y += 1;
+			
+			if(this.board[moving_y][x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[moving_y][x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkdown(x, moving_y, color, possible_reverse)) {
+						return true;
+					}else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean checkdownleft(int x, int y, String color, boolean possible_reverse) {
+		int moving_y = y;
+		int moving_x = x;
+		
+		if(y > MAS_NUMBER - 2 || x < 1) {
+			return false;
+		} else {
+			moving_y += 1;
+			moving_x -= 1;
+			
+			if(this.board[moving_y][moving_x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[moving_y][moving_x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkdownleft(moving_x, moving_y, color, possible_reverse)) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	
+	public boolean checkleft(int x, int y, String color, boolean possible_reverse) {
+		int moving_x = x;
+		if(x < 1) {
+			return false;
+		} else {
+			moving_x -= 1;
+			
+			if(this.board[y][moving_x].equals(EMPTY)) {
+				return false;
+			} else {
+				if(this.board[y][moving_x].equals(color)) {
+					if(!possible_reverse) {
+						return false;
+					} else {
+							return true;						
+					}
+				} else {
+					possible_reverse = true;
+					if(checkleft(moving_x, y, color, possible_reverse)) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+		}
+	}
 }

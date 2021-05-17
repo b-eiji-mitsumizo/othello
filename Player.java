@@ -9,11 +9,13 @@ public class Player {
 	Scanner scanner = new Scanner(System.in);
 	final static String BLACK = "●";
 	final static String WHITE = "〇";
+	final int MAS_NUM;
 	
-	public Player(String name, String color){
+	public Player(String name, String color, int masNum){
 		// TODO 自動生成されたコンストラクター・スタブ
 		this.name = name;
-		this.color = color;		
+		this.color = color;
+		this.MAS_NUM = masNum;
 	}
 	
 	// TODO : 置く場所を選ぶ関数
@@ -26,30 +28,30 @@ public class Player {
 		
 		while(true) {
 			System.out.println(this.name + "さん(" + this.color + ")のターンです");
-			System.out.print("縦を0 ～ 7で選んでください。 > ");
+			System.out.println("置く場所がない時は、(縦 : -1, 横 : -1)に設定してください。");
+			System.out.print("縦(y軸)を0～" + (MAS_NUM - 1) +"選んでください。 > ");
 			place[0] = scanner.nextInt();
 			
-			if(place[0] >= 0 && place[0] <= 7) {
+			if(place[0] >= -1 && place[0] <= MAS_NUM - 1) {
 				break;
 			} else {
-				System.out.println("0から7で選択してください。");
+				System.out.println("範囲内で選択してください。");
 				System.out.println("もう一度。");
 			}	
 		}
 		while(true) {
-			System.out.print("横を0 ～ 7で選んでください。 > ");
+			System.out.print("横(x軸)を0 ～" +(MAS_NUM - 1) + "で選んでください。 > ");
 			place[1] = scanner.nextInt();
 			
-			if(place[1] >= 0 && place[1] <= 7) {
+			if(place[1] >= -1 && place[1] <= MAS_NUM - 1) {
 				break;
 			} else {
-				System.out.println("0から7で選択してください。");
+				System.out.println("範囲内で選択してください。");
 				System.out.println("もう一度。");
 			}	
 		}
 		return place;
 	}
-	
 	
 	public String getColor() {
 		return color;
@@ -63,7 +65,4 @@ public class Player {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	
 }
